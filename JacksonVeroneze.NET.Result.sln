@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E124563D-D5AE-470D-AAE3-BDEDAE71C9BE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JacksonVeroneze.NET.Result", "src\JacksonVeroneze.NET.Result\JacksonVeroneze.NET.Result.csproj", "{7681A679-172C-4E1C-BF43-404427B428AC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{89EF0315-D6B6-408E-92AF-1D1FAC07F878}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		global.json = global.json
+		LICENSE = LICENSE
+		README.md = README.md
+		AssemblyInfo.cs = AssemblyInfo.cs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{79C30171-5855-4F28-8EA8-2555DB95BEA4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JacksonVeroneze.NET.Result.UnitTests", "tests\JacksonVeroneze.NET.Result.UnitTests\JacksonVeroneze.NET.Result.UnitTests.csproj", "{0E24330C-2836-4BE0-AEDA-E1412831EFB1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{5AD26BB6-9FCF-43C0-9CED-3965DB204C52}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\run-pr-assign.yml = .github\workflows\run-pr-assign.yml
+		.github\workflows\run-commit-linter.yml = .github\workflows\run-commit-linter.yml
+		.github\workflows\run-create-package.yml = .github\workflows\run-create-package.yml
+		.github\workflows\run-unit-tests.yaml = .github\workflows\run-unit-tests.yaml
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7681A679-172C-4E1C-BF43-404427B428AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7681A679-172C-4E1C-BF43-404427B428AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7681A679-172C-4E1C-BF43-404427B428AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7681A679-172C-4E1C-BF43-404427B428AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E24330C-2836-4BE0-AEDA-E1412831EFB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E24330C-2836-4BE0-AEDA-E1412831EFB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E24330C-2836-4BE0-AEDA-E1412831EFB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E24330C-2836-4BE0-AEDA-E1412831EFB1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7681A679-172C-4E1C-BF43-404427B428AC} = {E124563D-D5AE-470D-AAE3-BDEDAE71C9BE}
+		{0E24330C-2836-4BE0-AEDA-E1412831EFB1} = {79C30171-5855-4F28-8EA8-2555DB95BEA4}
+		{5AD26BB6-9FCF-43C0-9CED-3965DB204C52} = {89EF0315-D6B6-408E-92AF-1D1FAC07F878}
+	EndGlobalSection
+EndGlobal

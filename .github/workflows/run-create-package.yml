@@ -1,0 +1,35 @@
+name: Create Release
+
+on:
+  release:
+    types:
+      - created
+env:
+  GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+  PROJECT_NAME: JacksonVeroneze.NET.Result
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '7.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Test
+        run: dotnet test -c Release --no-restore /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+
+      - name: Build
+        run: dotnet build -c Release --no-restore ./src/${{env.PROJECT_NAME}}/${{env.PROJECT_NAME}}.csproj
+
+      - name: Pack
+        run: dotnet pack -c Release --include-source --include-symbols --no-build --no-restore -p:PackageVersion=${{github.event.release.tag_name}} ./src/${{env.PROJECT_NAME}}/${{env.PROJECT_NAME}}.csproj
+
+      - name: Publish Package
+        run: dotnet nuget push --source https://api.nuget.org/v3/index.json --skip-duplicate --api-key ${{secrets.NUGET_PUBLISH_KEY}} ./src/${{env.PROJECT_NAME}}/bin/Release/${{env.PROJECT_NAME}}.${{github.event.release.tag_name}}.nupkg
