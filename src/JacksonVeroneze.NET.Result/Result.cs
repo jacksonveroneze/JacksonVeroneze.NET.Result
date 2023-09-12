@@ -14,10 +14,6 @@ public class Result : IResult
 
     #region ctor
 
-    protected Result()
-    {
-    }
-
     protected Result(ResultStatus status)
     {
         Status = status;

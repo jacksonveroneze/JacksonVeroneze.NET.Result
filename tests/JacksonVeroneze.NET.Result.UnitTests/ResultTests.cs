@@ -1,5 +1,6 @@
 namespace JacksonVeroneze.NET.Result.UnitTests;
 
+[ExcludeFromCodeCoverage]
 public class ResultTests
 {
     #region Success

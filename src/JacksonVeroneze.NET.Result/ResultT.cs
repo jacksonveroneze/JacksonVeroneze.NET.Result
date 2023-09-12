@@ -6,10 +6,6 @@ public class Result<TValue> : Result, IResult<TValue>
 
     #region ctor
 
-    protected Result()
-    {
-    }
-
     protected Result(ResultStatus status)
         : base(status)
     {
