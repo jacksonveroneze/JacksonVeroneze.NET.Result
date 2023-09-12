@@ -213,8 +213,9 @@ public class ResultTTests
         // -------------------------------------------------------
         // Arrange
         // -------------------------------------------------------
-        ICollection<Error> errors = Enumerable.Range(1, 2)
-            .Select(_ => Error.None)
+        IList<Error> errors = Enumerable.Range(1, 2)
+            .Select(item => new Error($"Code_{item}",
+                $"Message_{item}"))
             .ToArray();
 
         // -------------------------------------------------------
@@ -241,8 +242,13 @@ public class ResultTTests
             .BeNull();
 
         result.Errors.Should()
-            .NotBeNull()
-            .And.HaveSameCount(errors);
+            .NotBeNullOrEmpty()
+            .And.HaveSameCount(errors)
+            .And.SatisfyRespectively(
+                first => first.Should()
+                    .Be(errors.First()),
+                second => second.Should()
+                    .Be(errors.Last()));
 
         result.Value.Should()
             .BeNull();
