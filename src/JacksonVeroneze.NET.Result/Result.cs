@@ -56,6 +56,15 @@ public class Result : IResult
 
     #endregion
 
+    #region error
+
+    public static IResult ErrorResult(Error error)
+    {
+        return new Result(ResultStatus.Error, error);
+    }
+
+    #endregion
+
     #region helpers
 
     public static IResult FirstFailureOrSuccess(

@@ -71,6 +71,25 @@ public class Result<TValue> : Result, IResult<TValue>
 
     #endregion
 
+    #region error
+
+    public static new IResult<TValue> Error()
+    {
+        return new Result<TValue>(ResultStatus.Error);
+    }
+
+    public static new IResult<TValue> Error(Error error)
+    {
+        return new Result<TValue>(ResultStatus.Error, error);
+    }
+
+    public static new IResult<TValue> Error(IEnumerable<Error> errors)
+    {
+        return new Result<TValue>(ResultStatus.Error, errors);
+    }
+
+    #endregion
+
     #region helpers
 
     public static IResult<TValue> FirstFailureOrSuccess(
