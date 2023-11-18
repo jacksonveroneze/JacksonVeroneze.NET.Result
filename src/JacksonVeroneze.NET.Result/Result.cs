@@ -12,6 +12,9 @@ public class Result : IResult
 
     public IEnumerable<Error>? Errors { get; set; }
 
+    public IEnumerable<IGrouping<string, Error>>? ErrorsGroup =>
+        Errors?.GroupBy(error => error.Code);
+
     #region ctor
 
     protected Result(ResultStatus status)
