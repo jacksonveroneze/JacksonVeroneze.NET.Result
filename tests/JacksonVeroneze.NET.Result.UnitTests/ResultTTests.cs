@@ -6,14 +6,14 @@ public class ResultTTests
     #region Success
 
     [Fact(DisplayName = nameof(Result<object>)
-                        + nameof(Result<object>.Success)
+                        + nameof(Result<object>.WithSuccess)
                         + "NoValue - Should Return Success")]
     public void Success_NoValue_ShouldReturnSuccess()
     {
         // -------------------------------------------------------
         // Arrange && Act
         // -------------------------------------------------------
-        IResult<int?> result = Result<int?>.Success();
+        Result<int?> result = Result<int?>.WithSuccess();
 
         // -------------------------------------------------------
         // Assert
@@ -27,8 +27,8 @@ public class ResultTTests
         result.IsFailure.Should()
             .BeFalse();
 
-        result.Status.Should()
-            .Be(ResultStatus.Success);
+        result.Type.Should()
+            .Be(ResultType.Success);
 
         result.Error.Should()
             .BeNull();
@@ -41,7 +41,7 @@ public class ResultTTests
     }
 
     [Fact(DisplayName = nameof(Result<object>)
-                        + nameof(Result<object>.Success)
+                        + nameof(Result<object>.WithSuccess)
                         + "HasValue - Should Return Success")]
     public void Success_HasValue_ShouldReturnSuccess()
     {
@@ -53,7 +53,7 @@ public class ResultTTests
         // -------------------------------------------------------
         // Arrange && Act
         // -------------------------------------------------------
-        IResult<object> result = Result<object>.Success(value);
+        Result<object> result = Result<object>.WithSuccess(value);
 
         // -------------------------------------------------------
         // Assert
@@ -67,8 +67,8 @@ public class ResultTTests
         result.IsFailure.Should()
             .BeFalse();
 
-        result.Status.Should()
-            .Be(ResultStatus.Success);
+        result.Type.Should()
+            .Be(ResultType.Success);
 
         result.Error.Should()
             .BeNull();
@@ -85,7 +85,7 @@ public class ResultTTests
     #region NotFound
 
     [Fact(DisplayName = nameof(Result<object>)
-                        + nameof(Result<object>.NotFound)
+                        + nameof(Result<object>.FromNotFound)
                         + "NoValue - Should Return Success")]
     public void NotFound_NoValue_ShouldReturnSuccess()
     {
@@ -97,7 +97,7 @@ public class ResultTTests
         // -------------------------------------------------------
         // Act
         // -------------------------------------------------------
-        IResult<int?> result = Result<int?>.NotFound(error);
+        Result<int?> result = Result<int?>.FromNotFound(error);
 
         // -------------------------------------------------------
         // Assert
@@ -111,8 +111,8 @@ public class ResultTTests
         result.IsFailure.Should()
             .BeTrue();
 
-        result.Status.Should()
-            .Be(ResultStatus.NotFound);
+        result.Type.Should()
+            .Be(ResultType.NotFound);
 
         result.Error.Should()
             .NotBeNull()
@@ -130,14 +130,14 @@ public class ResultTTests
     #region Invalid
 
     [Fact(DisplayName = nameof(Result<object>)
-                        + nameof(Result<object>.Invalid)
+                        + nameof(Result<object>.FromInvalid)
                         + "NoValue - Should Return Success")]
     public void Invalid_NoValue_ShouldReturnSuccess()
     {
         // -------------------------------------------------------
         // Arrange && Act
         // -------------------------------------------------------
-        IResult<int?> result = Result<int?>.Invalid();
+        Result<int?> result = Result<int?>.FromInvalid();
 
         // -------------------------------------------------------
         // Assert
@@ -151,8 +151,8 @@ public class ResultTTests
         result.IsFailure.Should()
             .BeTrue();
 
-        result.Status.Should()
-            .Be(ResultStatus.Invalid);
+        result.Type.Should()
+            .Be(ResultType.Invalid);
 
         result.Error.Should()
             .BeNull();
@@ -165,7 +165,7 @@ public class ResultTTests
     }
 
     [Fact(DisplayName = nameof(Result<object>)
-                        + nameof(Result<object>.Invalid)
+                        + nameof(Result<object>.FromInvalid)
                         + "NoValue - UniqueError - Should Return Success")]
     public void Invalid_NoValue_UniqueError__ShouldReturnSuccess()
     {
@@ -177,7 +177,7 @@ public class ResultTTests
         // -------------------------------------------------------
         // Act
         // -------------------------------------------------------
-        IResult<int?> result = Result<int?>.Invalid(error);
+        Result<int?> result = Result<int?>.FromInvalid(error);
 
         // -------------------------------------------------------
         // Assert
@@ -191,8 +191,8 @@ public class ResultTTests
         result.IsFailure.Should()
             .BeTrue();
 
-        result.Status.Should()
-            .Be(ResultStatus.Invalid);
+        result.Type.Should()
+            .Be(ResultType.Invalid);
 
         result.Error.Should()
             .NotBeNull()
@@ -206,7 +206,7 @@ public class ResultTTests
     }
 
     [Fact(DisplayName = nameof(Result<object>)
-                        + nameof(Result<object>.Invalid)
+                        + nameof(Result<object>.FromInvalid)
                         + "NoValue - CollectionErrors - Should Return Success")]
     public void Invalid_NoValue_CollectionErrors__ShouldReturnSuccess()
     {
@@ -221,7 +221,7 @@ public class ResultTTests
         // -------------------------------------------------------
         // Act
         // -------------------------------------------------------
-        IResult<int?> result = Result<int?>.Invalid(errors);
+        Result<int?> result = Result<int?>.FromInvalid(errors);
 
         // -------------------------------------------------------
         // Assert
@@ -235,8 +235,8 @@ public class ResultTTests
         result.IsFailure.Should()
             .BeTrue();
 
-        result.Status.Should()
-            .Be(ResultStatus.Invalid);
+        result.Type.Should()
+            .Be(ResultType.Invalid);
 
         result.Error.Should()
             .BeNull();
@@ -266,12 +266,12 @@ public class ResultTTests
         // -------------------------------------------------------
         // Arrange
         // -------------------------------------------------------
-        IResult<object> sucess = Result<object>.Success();
+        Result<object> sucess = Result<object>.WithSuccess();
 
         // -------------------------------------------------------
         // Act
         // -------------------------------------------------------
-        IResult<object> result = Result<object>.FirstFailureOrSuccess(
+        Result<object> result = Result<object>.FirstFailureOrSuccess(
             sucess);
 
         // -------------------------------------------------------
@@ -286,8 +286,8 @@ public class ResultTTests
         result.IsFailure.Should()
             .BeFalse();
 
-        result.Status.Should()
-            .Be(ResultStatus.Success);
+        result.Type.Should()
+            .Be(ResultType.Success);
 
         result.Error.Should()
             .BeNull();
@@ -304,13 +304,13 @@ public class ResultTTests
         // -------------------------------------------------------
         // Arrange
         // -------------------------------------------------------
-        IResult<object> sucess = Result<object>.Success();
-        IResult<object> error = Result<object>.Invalid(Error.None);
+        Result<object> sucess = Result<object>.WithSuccess();
+        Result<object> error = Result<object>.FromInvalid(Error.None);
 
         // -------------------------------------------------------
         // Act
         // -------------------------------------------------------
-        IResult<object> result = Result<object>.FirstFailureOrSuccess(
+        Result<object> result = Result<object>.FirstFailureOrSuccess(
             sucess, error);
 
         // -------------------------------------------------------
@@ -333,12 +333,12 @@ public class ResultTTests
         // -------------------------------------------------------
         // Arrange
         // -------------------------------------------------------
-        IResult<object> sucess = Result<object>.Success();
+        Result<object> sucess = Result<object>.WithSuccess();
 
         // -------------------------------------------------------
         // Act
         // -------------------------------------------------------
-        IResult<object> result = Result<object>.FailuresOrSuccess(
+        Result<object> result = Result<object>.FailuresOrSuccess(
             sucess);
 
         // -------------------------------------------------------
@@ -353,8 +353,8 @@ public class ResultTTests
         result.IsFailure.Should()
             .BeFalse();
 
-        result.Status.Should()
-            .Be(ResultStatus.Success);
+        result.Type.Should()
+            .Be(ResultType.Success);
 
         result.Error.Should()
             .BeNull();
@@ -371,14 +371,14 @@ public class ResultTTests
         // -------------------------------------------------------
         // Arrange
         // -------------------------------------------------------
-        IResult<object> sucess = Result<object>.Success();
-        IResult<object> error1 = Result<object>.Invalid(Error.None);
-        IResult<object> error2 = Result<object>.Invalid(Error.None);
+        Result<object> sucess = Result<object>.WithSuccess();
+        Result<object> error1 = Result<object>.FromInvalid(Error.None);
+        Result<object> error2 = Result<object>.FromInvalid(Error.None);
 
         // -------------------------------------------------------
         // Act
         // -------------------------------------------------------
-        IResult<object> result = Result<object>.FailuresOrSuccess(
+        Result<object> result = Result<object>.FailuresOrSuccess(
             sucess, error1, error2);
 
         // -------------------------------------------------------
@@ -393,8 +393,8 @@ public class ResultTTests
         result.IsFailure.Should()
             .BeTrue();
 
-        result.Status.Should()
-            .Be(ResultStatus.Invalid);
+        result.Type.Should()
+            .Be(ResultType.Invalid);
 
         result.Error.Should()
             .BeNull();

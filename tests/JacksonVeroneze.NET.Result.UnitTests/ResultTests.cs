@@ -6,14 +6,14 @@ public class ResultTests
     #region Success
 
     [Fact(DisplayName = nameof(Result)
-                        + nameof(Result.Success)
+                        + nameof(Result.WithSuccess)
                         + "Should Return Success")]
     public void Success_ShouldReturnSuccess()
     {
         // -------------------------------------------------------
         // Arrange && Act
         // -------------------------------------------------------
-        IResult result = Result.Success();
+        Result result = Result.WithSuccess();
 
         // -------------------------------------------------------
         // Assert
@@ -27,8 +27,8 @@ public class ResultTests
         result.IsFailure.Should()
             .BeFalse();
 
-        result.Status.Should()
-            .Be(ResultStatus.Success);
+        result.Type.Should()
+            .Be(ResultType.Success);
 
         result.Error.Should()
             .BeNull();
@@ -42,7 +42,7 @@ public class ResultTests
     #region Invalid
 
     [Fact(DisplayName = nameof(Result)
-                        + nameof(Result.Invalid)
+                        + nameof(Result.FromInvalid)
                         + "UniqueError - Should Return Success")]
     public void Invalid_UniqueError_ShouldReturnSuccess()
     {
@@ -54,7 +54,7 @@ public class ResultTests
         // -------------------------------------------------------
         // Act
         // -------------------------------------------------------
-        IResult result = Result.Invalid(error);
+        Result result = Result.FromInvalid(error);
 
         // -------------------------------------------------------
         // Assert
@@ -68,8 +68,8 @@ public class ResultTests
         result.IsFailure.Should()
             .BeTrue();
 
-        result.Status.Should()
-            .Be(ResultStatus.Invalid);
+        result.Type.Should()
+            .Be(ResultType.Invalid);
 
         result.Error.Should()
             .NotBeNull()
@@ -80,7 +80,7 @@ public class ResultTests
     }
 
     [Fact(DisplayName = nameof(Result)
-                        + nameof(Result.Invalid)
+                        + nameof(Result.FromInvalid)
                         + "MultipleErrors - Should Return Success")]
     public void Invalid_MultipleErrors_ShouldReturnSuccess()
     {
@@ -95,7 +95,7 @@ public class ResultTests
         // -------------------------------------------------------
         // Act
         // -------------------------------------------------------
-        IResult result = Result.Invalid(errors);
+        Result result = Result.FromInvalid(errors);
 
         // -------------------------------------------------------
         // Assert
@@ -109,8 +109,8 @@ public class ResultTests
         result.IsFailure.Should()
             .BeTrue();
 
-        result.Status.Should()
-            .Be(ResultStatus.Invalid);
+        result.Type.Should()
+            .Be(ResultType.Invalid);
 
         result.Error.Should()
             .BeNull();
@@ -137,12 +137,12 @@ public class ResultTests
         // -------------------------------------------------------
         // Arrange
         // -------------------------------------------------------
-        IResult sucess = Result.Success();
+        Result sucess = Result.WithSuccess();
 
         // -------------------------------------------------------
         // Act
         // -------------------------------------------------------
-        IResult result = Result.FirstFailureOrSuccess(
+        Result result = Result.FirstFailureOrSuccess(
             sucess);
 
         // -------------------------------------------------------
@@ -157,8 +157,8 @@ public class ResultTests
         result.IsFailure.Should()
             .BeFalse();
 
-        result.Status.Should()
-            .Be(ResultStatus.Success);
+        result.Type.Should()
+            .Be(ResultType.Success);
 
         result.Error.Should()
             .BeNull();
@@ -175,13 +175,13 @@ public class ResultTests
         // -------------------------------------------------------
         // Arrange
         // -------------------------------------------------------
-        IResult sucess = Result.Success();
-        IResult error = Result.Invalid(Error.None);
+        Result sucess = Result.WithSuccess();
+        Result error = Result.FromInvalid(Error.None);
 
         // -------------------------------------------------------
         // Act
         // -------------------------------------------------------
-        IResult result = Result.FirstFailureOrSuccess(
+        Result result = Result.FirstFailureOrSuccess(
             sucess, error);
 
         // -------------------------------------------------------
@@ -204,12 +204,12 @@ public class ResultTests
         // -------------------------------------------------------
         // Arrange
         // -------------------------------------------------------
-        IResult sucess = Result.Success();
+        Result sucess = Result.WithSuccess();
 
         // -------------------------------------------------------
         // Act
         // -------------------------------------------------------
-        IResult result = Result.FailuresOrSuccess(
+        Result result = Result.FailuresOrSuccess(
             sucess);
 
         // -------------------------------------------------------
@@ -224,8 +224,8 @@ public class ResultTests
         result.IsFailure.Should()
             .BeFalse();
 
-        result.Status.Should()
-            .Be(ResultStatus.Success);
+        result.Type.Should()
+            .Be(ResultType.Success);
 
         result.Error.Should()
             .BeNull();
@@ -242,14 +242,14 @@ public class ResultTests
         // -------------------------------------------------------
         // Arrange
         // -------------------------------------------------------
-        IResult sucess = Result.Success();
-        IResult error1 = Result.Invalid(Error.None);
-        IResult error2 = Result.Invalid(Error.None);
+        Result sucess = Result.WithSuccess();
+        Result error1 = Result.FromInvalid(Error.None);
+        Result error2 = Result.FromInvalid(Error.None);
 
         // -------------------------------------------------------
         // Act
         // -------------------------------------------------------
-        IResult result = Result.FailuresOrSuccess(
+        Result result = Result.FailuresOrSuccess(
             sucess, error1, error2);
 
         // -------------------------------------------------------
@@ -264,8 +264,8 @@ public class ResultTests
         result.IsFailure.Should()
             .BeTrue();
 
-        result.Status.Should()
-            .Be(ResultStatus.Invalid);
+        result.Type.Should()
+            .Be(ResultType.Invalid);
 
         result.Error.Should()
             .BeNull();

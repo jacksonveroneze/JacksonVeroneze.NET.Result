@@ -16,7 +16,7 @@ namespace JacksonVeroneze.NET.Result;
 /// - Error: 400
 /// - NotFound: 404
 /// </summary>
-public enum ResultStatus
+public enum ResultType
 {
     Success,
     Error,
