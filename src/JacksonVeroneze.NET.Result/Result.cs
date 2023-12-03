@@ -45,6 +45,15 @@ public class Result
 
     #endregion
 
+    #region notFound
+
+    public static Result FromNotFound(Error error)
+    {
+        return new Result(ResultType.NotFound, error);
+    }
+
+    #endregion
+
     #region invalid
 
     public static Result FromInvalid(Error error)
