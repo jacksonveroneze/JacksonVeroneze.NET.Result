@@ -1,36 +1,35 @@
 namespace JacksonVeroneze.NET.Result;
 
-public class Result : IResult
+public class Result
 {
-    public bool IsSuccess => Status is ResultStatus.Success;
+    public bool IsSuccess => Type is ResultType.Success;
 
     public bool IsFailure => !IsSuccess;
 
-    public ResultStatus Status { get; }
+    public ResultType Type { get; }
 
-    public Error? Error { get; set; }
+    public Error? Error { get; }
 
     public IEnumerable<Error>? Errors { get; set; }
 
+    public IEnumerable<IGrouping<string, Error>>? ErrorsGroup =>
+        Errors?.GroupBy(error => error.Code);
+
     #region ctor
 
-    protected Result()
+    protected Result(ResultType type)
     {
+        Type = type;
     }
 
-    protected Result(ResultStatus status)
-    {
-        Status = status;
-    }
-
-    protected Result(ResultStatus status, Error error)
-        : this(status)
+    protected Result(ResultType type, Error error)
+        : this(type)
     {
         Error = error;
     }
 
-    protected Result(ResultStatus status, IEnumerable<Error> errors)
-        : this(status)
+    protected Result(ResultType type, IEnumerable<Error> errors)
+        : this(type)
     {
         Errors = errors;
     }
@@ -39,42 +38,60 @@ public class Result : IResult
 
     #region success
 
-    public static IResult Success()
+    public static Result WithSuccess()
     {
-        return new Result(ResultStatus.Success);
+        return new Result(ResultType.Success);
+    }
+
+    #endregion
+
+    #region notFound
+
+    public static Result FromNotFound(Error error)
+    {
+        return new Result(ResultType.NotFound, error);
     }
 
     #endregion
 
     #region invalid
 
-    public static IResult Invalid(Error error)
+    public static Result FromInvalid(Error error)
     {
-        return new Result(ResultStatus.Invalid, error);
+        return new Result(ResultType.Invalid, error);
     }
 
-    public static IResult Invalid(IEnumerable<Error> error)
+    public static Result FromInvalid(IEnumerable<Error> error)
     {
-        return new Result(ResultStatus.Invalid, error);
+        return new Result(ResultType.Invalid, error);
+    }
+
+    #endregion
+
+    #region error
+
+    public static Result WithError(Error error)
+    {
+        return new Result(ResultType.Error, error);
     }
 
     #endregion
 
     #region helpers
 
-    public static IResult FirstFailureOrSuccess(
-        params IResult[] results)
+    public static Result FirstFailureOrSuccess(
+        params Result[] results)
     {
         ArgumentNullException.ThrowIfNull(nameof(results));
 
-        IResult? result = results.FirstOrDefault(
+        Result? result = results.FirstOrDefault(
             item => item.IsFailure);
 
-        return result ?? Success();
+        return result ?? WithSuccess();
     }
 
-    public static IResult FailuresOrSuccess(
-        params IResult[] results)
+    public static Result FailuresOrSuccess(
+        params Result[] results)
     {
         ArgumentNullException.ThrowIfNull(nameof(results));
 
@@ -83,7 +100,7 @@ public class Result : IResult
             .Select(item => item.Error)
             .ToArray()!;
 
-        return failures.Any() ? Invalid(failures) : Success();
+        return failures.Any() ? FromInvalid(failures) : WithSuccess();
     }
 
     #endregion

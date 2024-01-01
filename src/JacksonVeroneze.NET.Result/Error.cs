@@ -1,16 +1,10 @@
 namespace JacksonVeroneze.NET.Result;
 
-public sealed class Error
+public class Error(string code, string message)
 {
-    public string Code { get; }
+    public string Code { get; } = code;
 
-    public string Message { get; }
-
-    public Error(string code, string message)
-    {
-        Code = code;
-        Message = message;
-    }
+    public string Message { get; } = message;
 
     public static implicit operator string(Error error)
         => $"{error.Code} - {error.Message}";

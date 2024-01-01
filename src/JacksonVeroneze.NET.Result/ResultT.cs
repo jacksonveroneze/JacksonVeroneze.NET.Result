@@ -1,33 +1,29 @@
 namespace JacksonVeroneze.NET.Result;
 
-public class Result<TValue> : Result, IResult<TValue>
+public class Result<TValue> : Result
 {
     public TValue? Value { get; }
 
     #region ctor
 
-    protected Result()
+    private Result(ResultType type)
+        : base(type)
     {
     }
 
-    protected Result(ResultStatus status)
-        : base(status)
-    {
-    }
-
-    protected Result(ResultStatus status, TValue value)
-        : base(status)
+    private Result(ResultType type, TValue value)
+        : base(type)
     {
         Value = value;
     }
 
-    protected Result(ResultStatus status, Error error)
-        : base(status, error)
+    private Result(ResultType type, Error error)
+        : base(type, error)
     {
     }
 
-    protected Result(ResultStatus status, IEnumerable<Error> errors)
-        : base(status, errors)
+    private Result(ResultType type, IEnumerable<Error> errors)
+        : base(type, errors)
     {
     }
 
@@ -35,61 +31,80 @@ public class Result<TValue> : Result, IResult<TValue>
 
     #region success
 
-    public static new IResult<TValue> Success()
+    public static new Result<TValue> WithSuccess()
     {
-        return new Result<TValue>(ResultStatus.Success);
+        return new Result<TValue>(ResultType.Success);
     }
 
-    public static IResult<TValue> Success(TValue value)
+    public static Result<TValue> WithSuccess(TValue value)
     {
-        return new Result<TValue>(ResultStatus.Success, value);
+        return new Result<TValue>(ResultType.Success, value);
     }
 
     #endregion
 
     #region notFound
 
-    public static IResult<TValue> NotFound(Error error)
+    public static Result<TValue> FromNotFound(Error error)
     {
-        return new Result<TValue>(ResultStatus.NotFound, error);
+        return new Result<TValue>(ResultType.NotFound, error);
     }
 
     #endregion
 
     #region invalid
 
-    public static IResult<TValue> Invalid()
+    public static Result<TValue> FromInvalid()
     {
-        return new Result<TValue>(ResultStatus.Invalid);
+        return new Result<TValue>(ResultType.Invalid);
     }
 
-    public static new IResult<TValue> Invalid(Error error)
+    public static new Result<TValue> FromInvalid(Error error)
     {
-        return new Result<TValue>(ResultStatus.Invalid, error);
+        return new Result<TValue>(ResultType.Invalid, error);
     }
 
-    public static new IResult<TValue> Invalid(IEnumerable<Error> errors)
+    public static new Result<TValue> FromInvalid(IEnumerable<Error> errors)
     {
-        return new Result<TValue>(ResultStatus.Invalid, errors);
+        return new Result<TValue>(ResultType.Invalid, errors);
+    }
+
+    #endregion
+
+    #region error
+
+    public static Result<TValue> WithError()
+    {
+        return new Result<TValue>(ResultType.Error);
+    }
+
+    public static new Result<TValue> WithError(Error error)
+    {
+        return new Result<TValue>(ResultType.Error, error);
+    }
+
+    public static Result<TValue> WithError(IEnumerable<Error> errors)
+    {
+        return new Result<TValue>(ResultType.Error, errors);
     }
 
     #endregion
 
     #region helpers
 
-    public static IResult<TValue> FirstFailureOrSuccess(
-        params IResult<TValue>[] results)
+    public static Result<TValue> FirstFailureOrSuccess(
+        params Result<TValue>[] results)
     {
         ArgumentNullException.ThrowIfNull(nameof(results));
 
-        IResult<TValue>? failure = results.FirstOrDefault(
+        Result<TValue>? failure = results.FirstOrDefault(
             item => item.IsFailure);
 
-        return failure ?? Success();
+        return failure ?? WithSuccess();
     }
 
-    public static IResult<TValue> FailuresOrSuccess(
-        params IResult<TValue>[] results)
+    public static Result<TValue> FailuresOrSuccess(
+        params Result<TValue>[] results)
     {
         ArgumentNullException.ThrowIfNull(nameof(results));
 
@@ -98,7 +113,7 @@ public class Result<TValue> : Result, IResult<TValue>
             .Select(item => item.Error)
             .ToArray()!;
 
-        return failures.Any() ? Invalid(failures) : Success();
+        return failures.Any() ? FromInvalid(failures) : WithSuccess();
     }
 
     #endregion
