@@ -45,7 +45,7 @@ public class Result<TValue> : Result
 
     #region notFound
 
-    public static Result<TValue> FromNotFound(Error error)
+    public static new Result<TValue> FromNotFound(Error error)
     {
         return new Result<TValue>(ResultType.NotFound, error);
     }
@@ -95,7 +95,7 @@ public class Result<TValue> : Result
     public static Result<TValue> FirstFailureOrSuccess(
         params Result<TValue>[] results)
     {
-        ArgumentNullException.ThrowIfNull(nameof(results));
+        ArgumentNullException.ThrowIfNull(results);
 
         Result<TValue>? failure = results.FirstOrDefault(
             item => item.IsFailure);
@@ -106,7 +106,7 @@ public class Result<TValue> : Result
     public static Result<TValue> FailuresOrSuccess(
         params Result<TValue>[] results)
     {
-        ArgumentNullException.ThrowIfNull(nameof(results));
+        ArgumentNullException.ThrowIfNull(results);
 
         IList<Error> failures = results
             .Where(item => item.IsFailure)
