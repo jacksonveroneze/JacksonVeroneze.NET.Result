@@ -82,7 +82,7 @@ public class Result
     public static Result FirstFailureOrSuccess(
         params Result[] results)
     {
-        ArgumentNullException.ThrowIfNull(nameof(results));
+        ArgumentNullException.ThrowIfNull(results);
 
         Result? result = results.FirstOrDefault(
             item => item.IsFailure);
@@ -93,7 +93,7 @@ public class Result
     public static Result FailuresOrSuccess(
         params Result[] results)
     {
-        ArgumentNullException.ThrowIfNull(nameof(results));
+        ArgumentNullException.ThrowIfNull(results);
 
         ICollection<Error> failures = results
             .Where(item => item.IsFailure)
