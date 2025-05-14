@@ -30,11 +30,8 @@ public class ResultTests
         result.Type.Should()
             .Be(ResultType.Success);
 
-        result.Error.Should()
-            .BeNull();
-
         result.Errors.Should()
-            .BeNull();
+            .BeNullOrEmpty();
     }
 
     #endregion
@@ -71,12 +68,9 @@ public class ResultTests
         result.Type.Should()
             .Be(ResultType.Invalid);
 
-        result.Error.Should()
-            .NotBeNull()
-            .And.Be(error);
-
         result.Errors.Should()
-            .BeNull();
+            .NotBeNull()
+            .And.Contain(error);
     }
 
     [Fact(DisplayName = nameof(Result)
@@ -88,7 +82,7 @@ public class ResultTests
         // Arrange
         // -------------------------------------------------------
         IList<Error> errors = Enumerable.Range(1, 2)
-            .Select(item => new Error($"Code_{item}",
+            .Select(item => Error.Create($"Code_{item}",
                 $"Message_{item}"))
             .ToArray();
 
@@ -111,9 +105,6 @@ public class ResultTests
 
         result.Type.Should()
             .Be(ResultType.Invalid);
-
-        result.Error.Should()
-            .BeNull();
 
         result.Errors.Should()
             .NotBeNullOrEmpty()
@@ -160,11 +151,8 @@ public class ResultTests
         result.Type.Should()
             .Be(ResultType.Success);
 
-        result.Error.Should()
-            .BeNull();
-
         result.Errors.Should()
-            .BeNull();
+            .BeNullOrEmpty();
     }
 
     [Fact(DisplayName = nameof(Result)
@@ -227,11 +215,8 @@ public class ResultTests
         result.Type.Should()
             .Be(ResultType.Success);
 
-        result.Error.Should()
-            .BeNull();
-
         result.Errors.Should()
-            .BeNull();
+            .BeNullOrEmpty();
     }
 
     [Fact(DisplayName = nameof(Result)
@@ -266,9 +251,6 @@ public class ResultTests
 
         result.Type.Should()
             .Be(ResultType.Invalid);
-
-        result.Error.Should()
-            .BeNull();
 
         result.Errors.Should()
             .NotBeNullOrEmpty()

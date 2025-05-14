@@ -30,11 +30,8 @@ public class ResultTTests
         result.Type.Should()
             .Be(ResultType.Success);
 
-        result.Error.Should()
-            .BeNull();
-
         result.Errors.Should()
-            .BeNull();
+            .BeNullOrEmpty();
 
         result.Value.Should()
             .BeNull();
@@ -70,11 +67,8 @@ public class ResultTTests
         result.Type.Should()
             .Be(ResultType.Success);
 
-        result.Error.Should()
-            .BeNull();
-
         result.Errors.Should()
-            .BeNull();
+            .BeNullOrEmpty();
 
         result.Value.Should()
             .Be(value);
@@ -114,12 +108,9 @@ public class ResultTTests
         result.Type.Should()
             .Be(ResultType.NotFound);
 
-        result.Error.Should()
-            .NotBeNull()
-            .And.Be(error);
-
         result.Errors.Should()
-            .BeNull();
+            .NotBeNull()
+            .And.Contain(error);
 
         result.Value.Should()
             .BeNull();
@@ -154,11 +145,8 @@ public class ResultTTests
         result.Type.Should()
             .Be(ResultType.Invalid);
 
-        result.Error.Should()
-            .BeNull();
-
         result.Errors.Should()
-            .BeNull();
+            .BeNullOrEmpty();
 
         result.Value.Should()
             .BeNull();
@@ -194,12 +182,9 @@ public class ResultTTests
         result.Type.Should()
             .Be(ResultType.Invalid);
 
-        result.Error.Should()
-            .NotBeNull()
-            .And.Be(error);
-
         result.Errors.Should()
-            .BeNull();
+            .NotBeNull()
+            .And.Contain(error);
 
         result.Value.Should()
             .BeNull();
@@ -214,7 +199,7 @@ public class ResultTTests
         // Arrange
         // -------------------------------------------------------
         IList<Error> errors = Enumerable.Range(1, 2)
-            .Select(item => new Error($"Code_{item}",
+            .Select(item => Error.Create($"Code_{item}",
                 $"Message_{item}"))
             .ToArray();
 
@@ -237,9 +222,6 @@ public class ResultTTests
 
         result.Type.Should()
             .Be(ResultType.Invalid);
-
-        result.Error.Should()
-            .BeNull();
 
         result.Errors.Should()
             .NotBeNullOrEmpty()
@@ -289,11 +271,8 @@ public class ResultTTests
         result.Type.Should()
             .Be(ResultType.Success);
 
-        result.Error.Should()
-            .BeNull();
-
         result.Errors.Should()
-            .BeNull();
+            .BeNullOrEmpty();
     }
 
     [Fact(DisplayName = nameof(Result<object>)
@@ -356,11 +335,8 @@ public class ResultTTests
         result.Type.Should()
             .Be(ResultType.Success);
 
-        result.Error.Should()
-            .BeNull();
-
         result.Errors.Should()
-            .BeNull();
+            .BeNullOrEmpty();
     }
 
     [Fact(DisplayName = nameof(Result<object>)
@@ -395,9 +371,6 @@ public class ResultTTests
 
         result.Type.Should()
             .Be(ResultType.Invalid);
-
-        result.Error.Should()
-            .BeNull();
 
         result.Errors.Should()
             .NotBeNullOrEmpty()

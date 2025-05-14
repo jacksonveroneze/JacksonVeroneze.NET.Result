@@ -1,6 +1,6 @@
 namespace JacksonVeroneze.NET.Result;
 
-public class Result<TValue> : Result
+public sealed class Result<TValue> : Result
 {
     public TValue? Value { get; }
 
@@ -43,15 +43,6 @@ public class Result<TValue> : Result
 
     #endregion
 
-    #region notFound
-
-    public static new Result<TValue> FromNotFound(Error error)
-    {
-        return new Result<TValue>(ResultType.NotFound, error);
-    }
-
-    #endregion
-
     #region invalid
 
     public static Result<TValue> FromInvalid()
@@ -67,6 +58,48 @@ public class Result<TValue> : Result
     public static new Result<TValue> FromInvalid(IEnumerable<Error> errors)
     {
         return new Result<TValue>(ResultType.Invalid, errors);
+    }
+
+    #endregion
+
+    #region conflict
+
+    public static Result<TValue> FromConflict()
+    {
+        return new Result<TValue>(ResultType.Conflict);
+    }
+
+    public static new Result<TValue> FromConflict(Error error)
+    {
+        return new Result<TValue>(ResultType.Conflict, error);
+    }
+
+    public static new Result<TValue> FromConflict(IEnumerable<Error> errors)
+    {
+        return new Result<TValue>(ResultType.Conflict, errors);
+    }
+
+    #endregion
+
+    #region ruleViolation
+
+    public static new Result<TValue> FromRuleViolation(Error error)
+    {
+        return new Result<TValue>(ResultType.RuleViolation, error);
+    }
+
+    public static new Result<TValue> FromRuleViolation(IEnumerable<Error> errors)
+    {
+        return new Result<TValue>(ResultType.RuleViolation, errors);
+    }
+
+    #endregion
+
+    #region notFound
+
+    public static new Result<TValue> FromNotFound(Error error)
+    {
+        return new Result<TValue>(ResultType.NotFound, error);
     }
 
     #endregion
@@ -97,10 +130,9 @@ public class Result<TValue> : Result
     {
         ArgumentNullException.ThrowIfNull(results);
 
-        Result<TValue>? failure = results.FirstOrDefault(
-            item => item.IsFailure);
+        Result<TValue>? result = results.FirstOrDefault(item => item.IsFailure);
 
-        return failure ?? WithSuccess();
+        return result ?? WithSuccess();
     }
 
     public static Result<TValue> FailuresOrSuccess(
@@ -110,8 +142,8 @@ public class Result<TValue> : Result
 
         IList<Error> failures = results
             .Where(item => item.IsFailure)
-            .Select(item => item.Error)
-            .ToArray()!;
+            .SelectMany(item => item.Errors)
+            .ToArray();
 
         return failures.Any() ? FromInvalid(failures) : WithSuccess();
     }

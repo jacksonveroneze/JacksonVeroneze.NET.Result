@@ -14,7 +14,7 @@
     <PackageDescription>JacksonVeroneze.NET.Result</PackageDescription>
     <RepositoryUrl>https://github.com/jacksonveroneze/JacksonVeroneze.NET.Result</RepositoryUrl>
     <Title>JacksonVeroneze.NET.Result</Title>
-    <Description>Pacote utilizado para HttpClient</Description>
+    <Description>Pacote utilizado para Result</Description>
     <PackageProjectUrl>JacksonVeroneze.NET.Result</PackageProjectUrl>
     <PackageLicenseUrl>JacksonVeroneze.NET.Result/blob/main/LICENSE</PackageLicenseUrl>
     <Copyright>Jackson Veroneze</Copyright>
