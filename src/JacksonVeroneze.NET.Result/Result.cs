@@ -12,9 +12,6 @@ public class Result
 
     public IReadOnlyCollection<Error> Errors { get; } = [];
 
-    public IEnumerable<IGrouping<string, Error>> ErrorsGroup =>
-        Errors.GroupBy(error => error.Target ?? string.Empty);
-
     #region ctor
 
     protected Result(ResultType type)
@@ -134,13 +131,24 @@ public class Result
         return failures.Any() ? FromInvalid(failures) : WithSuccess();
     }
 
-    public bool HasErrorCode(string code) =>
+    public bool HasErrorForCode(string code) =>
         Errors.Any(error => error.Code.Equals(
             code, StringComparison.OrdinalIgnoreCase));
 
     public bool HasErrorForTarget(string target) =>
         Errors.Any(error => error.Target?.Equals(
             target, StringComparison.OrdinalIgnoreCase) ?? false);
+
+    public IEnumerable<IGrouping<string, Error>> ToGroupByCode =>
+        Errors.GroupBy(error => error.Code ?? string.Empty);
+
+    public IDictionary<string, IEnumerable<string>> ToDictionaryByTarget =>
+        Errors.GroupBy(error => error.Target ?? "general",
+                StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(
+                group => group.Key,
+                group => group.Select(error => error.Message),
+                StringComparer.OrdinalIgnoreCase);
 
     #endregion
 }
