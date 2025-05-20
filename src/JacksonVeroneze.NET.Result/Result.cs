@@ -1,3 +1,5 @@
+using System.Collections.Immutable;
+
 namespace JacksonVeroneze.NET.Result;
 
 public class Result
@@ -8,12 +10,7 @@ public class Result
 
     public ResultType Type { get; }
 
-    public Error? Error { get; }
-
-    public IEnumerable<Error>? Errors { get; set; }
-
-    public IEnumerable<IGrouping<string, Error>>? ErrorsGroup =>
-        Errors?.GroupBy(error => error.Code);
+    public IReadOnlyCollection<Error> Errors { get; } = [];
 
     #region ctor
 
@@ -25,13 +22,13 @@ public class Result
     protected Result(ResultType type, Error error)
         : this(type)
     {
-        Error = error;
+        Errors = [error];
     }
 
     protected Result(ResultType type, IEnumerable<Error> errors)
         : this(type)
     {
-        Errors = errors;
+        Errors = errors.ToImmutableArray();
     }
 
     #endregion
@@ -45,15 +42,6 @@ public class Result
 
     #endregion
 
-    #region notFound
-
-    public static Result FromNotFound(Error error)
-    {
-        return new Result(ResultType.NotFound, error);
-    }
-
-    #endregion
-
     #region invalid
 
     public static Result FromInvalid(Error error)
@@ -61,9 +49,46 @@ public class Result
         return new Result(ResultType.Invalid, error);
     }
 
-    public static Result FromInvalid(IEnumerable<Error> error)
+    public static Result FromInvalid(IEnumerable<Error> errors)
     {
-        return new Result(ResultType.Invalid, error);
+        return new Result(ResultType.Invalid, errors);
+    }
+
+    #endregion
+
+    #region conflict
+
+    public static Result FromConflict(Error error)
+    {
+        return new Result(ResultType.Conflict, error);
+    }
+
+    public static Result FromConflict(IEnumerable<Error> errors)
+    {
+        return new Result(ResultType.Conflict, errors);
+    }
+
+    #endregion
+
+    #region ruleViolation
+
+    public static Result FromRuleViolation(Error error)
+    {
+        return new Result(ResultType.RuleViolation, error);
+    }
+
+    public static Result FromRuleViolation(IEnumerable<Error> error)
+    {
+        return new Result(ResultType.RuleViolation, error);
+    }
+
+    #endregion
+
+    #region notFound
+
+    public static Result FromNotFound(Error error)
+    {
+        return new Result(ResultType.NotFound, error);
     }
 
     #endregion
@@ -79,13 +104,16 @@ public class Result
 
     #region helpers
 
+    public bool HasErrors => Errors.Count > 0;
+
+    public Error? FirstError => Errors.FirstOrDefault();
+
     public static Result FirstFailureOrSuccess(
         params Result[] results)
     {
         ArgumentNullException.ThrowIfNull(results);
 
-        Result? result = results.FirstOrDefault(
-            item => item.IsFailure);
+        Result? result = results.FirstOrDefault(item => item.IsFailure);
 
         return result ?? WithSuccess();
     }
@@ -97,11 +125,30 @@ public class Result
 
         ICollection<Error> failures = results
             .Where(item => item.IsFailure)
-            .Select(item => item.Error)
-            .ToArray()!;
+            .SelectMany(item => item.Errors)
+            .ToArray();
 
         return failures.Any() ? FromInvalid(failures) : WithSuccess();
     }
+
+    public bool HasErrorForCode(string code) =>
+        Errors.Any(error => error.Code.Equals(
+            code, StringComparison.OrdinalIgnoreCase));
+
+    public bool HasErrorForTarget(string target) =>
+        Errors.Any(error => error.Target?.Equals(
+            target, StringComparison.OrdinalIgnoreCase) ?? false);
+
+    public IEnumerable<IGrouping<string, Error>> ToGroupByCode =>
+        Errors.GroupBy(error => error.Code ?? string.Empty);
+
+    public IDictionary<string, IEnumerable<string>> ToDictionaryByTarget =>
+        Errors.GroupBy(error => error.Target ?? "general",
+                StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(
+                group => group.Key,
+                group => group.Select(error => error.Message),
+                StringComparer.OrdinalIgnoreCase);
 
     #endregion
 }
