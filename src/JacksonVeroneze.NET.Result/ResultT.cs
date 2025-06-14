@@ -123,6 +123,15 @@ public sealed class Result<TValue> : Result
 
     #endregion
 
+    #region fromOtherResult
+
+    public static Result<TValue> FromResult(Result result)
+    {
+        return new Result<TValue>(result.Type, result.Errors);
+    }
+
+    #endregion
+
     #region helpers
 
     public static Result<TValue> FirstFailureOrSuccess(

@@ -102,6 +102,15 @@ public class Result
 
     #endregion
 
+    #region fromOtherResult
+
+    public static Result FromResult<TValue>(Result<TValue> result)
+    {
+        return new Result(result.Type, result.Errors);
+    }
+
+    #endregion
+
     #region helpers
 
     public bool HasErrors => Errors.Count > 0;
